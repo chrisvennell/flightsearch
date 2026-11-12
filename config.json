@@ -1,0 +1,226 @@
+{
+  "agents": {
+    "flights": {
+      "enabled": true,
+      "monthly_call_budget": 250,
+      "currency": "NZD",
+      "gl": "nz",
+      "adults": 1,
+      "drop_alert_percent": 10,
+      "check_every_days": 6,
+      "airport_sets": {
+        "spain": [
+          "AGP",
+          "SVQ",
+          "GRX",
+          "MAD",
+          "VLC",
+          "ALC",
+          "BCN",
+          "BIO",
+          "XRY"
+        ],
+        "overnight_ok": [
+          "SIN",
+          "KUL",
+          "ICN",
+          "BKK",
+          "DEL",
+          "DOH",
+          "DXB",
+          "SHJ",
+          "BAH",
+          "MCT",
+          "JED",
+          "AMS",
+          "FRA",
+          "IST",
+          "CDG",
+          "ZRH",
+          "CHC",
+          "AKL",
+          "BNE",
+          "SYD",
+          "HKG"
+        ],
+        "middle_east": [
+          "DXB",
+          "DWC",
+          "SHJ",
+          "AUH",
+          "DOH",
+          "BAH",
+          "KWI",
+          "MCT",
+          "RUH",
+          "JED",
+          "DMM",
+          "MED",
+          "AMM",
+          "TLV",
+          "BEY"
+        ]
+      },
+      "searches": [
+        {
+          "name": "Out: DUD to Spain direct booking",
+          "from": "DUD",
+          "to": "@spain",
+          "depart": {
+            "from": "2027-07-24",
+            "to": "2027-07-28"
+          },
+          "arrive_between": [
+            "2027-07-26",
+            "2027-07-30"
+          ],
+          "overnight_ok": "@overnight_ok",
+          "rules": {
+            "base_cap": 1300,
+            "no_middle_east_cap": 1600,
+            "per_overnight_drop": 200,
+            "prefer": "shortest"
+          }
+        },
+        {
+          "name": "Out: via Gold Coast, overland to Brisbane",
+          "stitch": {
+            "first": {
+              "from": "DUD",
+              "to": "OOL",
+              "depart": {
+                "from": "2027-07-21",
+                "to": "2027-07-26"
+              }
+            },
+            "second": {
+              "from": "BNE",
+              "to": "@spain",
+              "depart": {
+                "from": "2027-07-23",
+                "to": "2027-07-28"
+              }
+            },
+            "min_gap_hours": 5,
+            "max_gap_hours": 72,
+            "count_gap_nights": false
+          },
+          "arrive_between": [
+            "2027-07-26",
+            "2027-07-30"
+          ],
+          "overnight_ok": "@overnight_ok",
+          "rules": {
+            "base_cap": 1300,
+            "no_middle_east_cap": 1600,
+            "per_overnight_drop": 200,
+            "prefer": "shortest"
+          }
+        },
+        {
+          "name": "Out: Sydney to Western Sydney self transfer",
+          "stitch": {
+            "first": {
+              "from": "DUD",
+              "to": [
+                "SYD",
+                "WSI"
+              ],
+              "depart": {
+                "from": "2027-07-23",
+                "to": "2027-07-27"
+              }
+            },
+            "second": {
+              "from": [
+                "SYD",
+                "WSI"
+              ],
+              "to": "@spain",
+              "depart": {
+                "from": "2027-07-24",
+                "to": "2027-07-28"
+              }
+            },
+            "min_gap_hours": 6,
+            "max_gap_hours": 30,
+            "count_gap_nights": true
+          },
+          "arrive_between": [
+            "2027-07-26",
+            "2027-07-30"
+          ],
+          "overnight_ok": "@overnight_ok",
+          "rules": {
+            "base_cap": 1300,
+            "no_middle_east_cap": 1600,
+            "per_overnight_drop": 200,
+            "prefer": "shortest"
+          }
+        },
+        {
+          "name": "Back: Spain to Australia or Dunedin",
+          "to": [
+            "BNE",
+            "OOL",
+            "MCY",
+            "DUD"
+          ],
+          "queries": [
+            {
+              "from": "AGP",
+              "depart": "2027-08-04"
+            },
+            {
+              "from": "@spain",
+              "depart": {
+                "from": "2027-08-05",
+                "to": "2027-08-13"
+              }
+            }
+          ],
+          "rules": {
+            "base_cap": 1100,
+            "per_overnight_drop": 200,
+            "cap_by_destination": {
+              "DUD": 1300
+            },
+            "prefer": "cheapest"
+          }
+        },
+        {
+          "name": "Dunedin to Wellington return",
+          "enabled": true,
+          "from": "DUD",
+          "to": "WLG",
+          "queries": [
+            {
+              "depart": "2027-02-17",
+              "return": "2027-02-21",
+              "outbound_times": "16,23",
+              "return_times": "12,23"
+            },
+            {
+              "depart": "2027-02-17",
+              "return": "2027-02-22",
+              "outbound_times": "16,23"
+            },
+            {
+              "depart": "2027-02-18",
+              "return": "2027-02-21",
+              "return_times": "12,23"
+            },
+            {
+              "depart": "2027-02-18",
+              "return": "2027-02-22"
+            }
+          ],
+          "rules": {
+            "base_cap": 150,
+            "prefer": "cheapest"
+          }
+        }
+      ]
+    }
+  }
+}
