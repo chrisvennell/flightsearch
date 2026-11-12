@@ -1,0 +1,116 @@
+{
+  "_usage": {
+    "flights": {
+      "2026-11": 41
+    }
+  },
+  "agents": {
+    "flights": {
+      "Back: Spain to Australia or Dunedin": {
+        "best": 1565,
+        "card": {
+          "badge": "NZD 465 over",
+          "link": "https://www.google.com/travel/flights?hl=en&gl=nz&curr=NZD&tfs=CBwQAhqBARIKMjAyNy0wOC0wOGoHCAESA0FHUGoHCAESA1NWUWoHCAESA0dSWGoHCAESA01BRGoHCAESA1ZMQ2oHCAESA0FMQ2oHCAESA0JDTmoHCAESA0JJT2oHCAESA1hSWXIHCAESA0JORXIHCAESA09PTHIHCAESA01DWXIHCAESA0RVREABSAFwAZgBAg&tfu=EgIIAg",
+          "subtitle": "MAD-DXB-BNE. leaves 8 Aug 15:25, arrives 10 Aug 06:25. 31h 00m total. Emirates. Limit for this routing NZD 1,100",
+          "title": "Back: Spain to Australia or Dunedin",
+          "tone": "",
+          "value": "NZD 1,565"
+        },
+        "checked": "2026-11-12T23:52:03+00:00",
+        "history": [
+          [
+            "2026-11-12",
+            1565
+          ]
+        ],
+        "last": 1565,
+        "last_alert_price": null,
+        "last_sweep": "2026-11-12"
+      },
+      "Dunedin to Wellington return": {
+        "best": 260,
+        "card": {
+          "badge": "NZD 110 over",
+          "link": "https://www.google.com/travel/flights?hl=en&gl=nz&curr=NZD&tfs=CBwQAhoeEgoyMDI3LTAyLTE4agcIARIDRFVEcgcIARIDV0xHGh4SCjIwMjctMDItMjJqBwgBEgNXTEdyBwgBEgNEVURAAUgBcAGYAQE&tfu=EgIIAg",
+          "subtitle": "DUD-WLG. leaves 18 Feb 16:25, arrives 18 Feb 17:40. 1h 15m total. Air New Zealand. Limit for this routing NZD 150",
+          "title": "Dunedin to Wellington return",
+          "tone": "",
+          "value": "NZD 260"
+        },
+        "checked": "2026-11-12T23:52:03+00:00",
+        "history": [
+          [
+            "2026-11-12",
+            260
+          ]
+        ],
+        "last": 260,
+        "last_alert_price": null,
+        "last_sweep": "2026-11-12"
+      },
+      "Out: DUD to Spain direct booking": {
+        "best": 1537,
+        "card": {
+          "badge": "within limits",
+          "link": "https://www.google.com/travel/flights?hl=en&gl=nz&curr=NZD&tfs=CBwQAhpmEgoyMDI3LTA3LTI4agcIARIDRFVEcgcIARIDQUdQcgcIARIDU1ZRcgcIARIDR1JYcgcIARIDTUFEcgcIARIDVkxDcgcIARIDQUxDcgcIARIDQkNOcgcIARIDQklPcgcIARIDWFJZQAFIAXABmAEC&tfu=EgIIAg",
+          "subtitle": "DUD-AKL-CAN-MAD. leaves 28 Jul 15:15, arrives 30 Jul 08:00. 50h 45m total. Air New Zealand + China Southern. Limit for this routing NZD 1,600",
+          "title": "Out: DUD to Spain direct booking",
+          "tone": "good",
+          "value": "NZD 1,537"
+        },
+        "checked": "2026-11-12T23:52:03+00:00",
+        "history": [
+          [
+            "2026-11-12",
+            1537
+          ]
+        ],
+        "last": 1537,
+        "last_alert_price": 1537,
+        "last_sweep": "2026-11-12"
+      },
+      "Out: Sydney to Western Sydney self transfer": {
+        "best": 1461,
+        "card": {
+          "badge": "within limits",
+          "link": "https://www.google.com/travel/flights?q=Flights%20for%20Out%3A%20Sydney%20to%20Western%20Sydney%20self%20transfer",
+          "subtitle": "DUD-CHC-AKL-SYD / SYD-SIN-BCN. leaves 27 Jul 16:50, arrives 29 Jul 06:55. 48h 05m total. Air New Zealand + Singapore Airlines. two tickets: SYD to SYD, 6h between tickets. Limit for this routing NZD 1,600",
+          "title": "Out: Sydney to Western Sydney self transfer",
+          "tone": "good",
+          "value": "NZD 1,461"
+        },
+        "checked": "2026-11-12T23:52:03+00:00",
+        "history": [
+          [
+            "2026-11-12",
+            1461
+          ]
+        ],
+        "last": 1461,
+        "last_alert_price": 1208,
+        "last_sweep": "2026-11-12"
+      },
+      "Out: via Gold Coast, overland to Brisbane": {
+        "best": 1452,
+        "card": {
+          "badge": "within limits",
+          "link": "https://www.google.com/travel/flights?q=Flights%20for%20Out%3A%20via%20Gold%20Coast%2C%20overland%20to%20Brisbane",
+          "subtitle": "DUD-AKL-OOL / BNE-SIN-BCN. leaves 25 Jul 19:40, arrives 27 Jul 06:55. 45h 15m total. Air New Zealand + Singapore Airlines. two tickets: OOL to BNE, 7h between tickets. Limit for this routing NZD 1,600",
+          "title": "Out: via Gold Coast, overland to Brisbane",
+          "tone": "good",
+          "value": "NZD 1,452"
+        },
+        "checked": "2026-11-12T23:52:03+00:00",
+        "history": [
+          [
+            "2026-11-12",
+            1452
+          ]
+        ],
+        "last": 1452,
+        "last_alert_price": 1173,
+        "last_sweep": "2026-11-12"
+      }
+    }
+  }
+}
