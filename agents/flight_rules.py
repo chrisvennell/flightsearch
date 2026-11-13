@@ -125,6 +125,8 @@ def stitch(
     min_gap_hours: float,
     max_gap_hours: float,
     count_gap_nights: bool = True,
+    min_gap_by_airport: dict[str, float] | None = None,
+    max_gap_nights: int | None = None,
 ) -> list[dict[str, Any]]:
     """Pair two separate tickets where the second leaves a suitable time after the first lands.
 
@@ -141,9 +143,13 @@ def stitch(
                 continue
             gap = leaves - landed
             hours = gap.total_seconds() / 3600
-            if hours < min_gap_hours or hours > max_gap_hours:
+            shortest = (min_gap_by_airport or {}).get(b["from"], min_gap_hours)
+            if hours < shortest or hours > max_gap_hours:
                 continue
-            nights = (leaves.date() - landed.date()).days if count_gap_nights else 0
+            between = (leaves.date() - landed.date()).days
+            if max_gap_nights is not None and between > max_gap_nights:
+                continue
+            nights = between if count_gap_nights else 0
             joined.append(
                 {
                     "price": a["price"] + b["price"],
@@ -210,6 +216,9 @@ def is_valid(
         if not day or not (window[0] <= day <= window[1]):
             return False
     if overnight_ok is not None and any(code not in overnight_ok for code in it["overnights"]):
+        return False
+    via = search.get("via_any")
+    if via and not (set(it["airports"]) & {code.upper() for code in via}):
         return False
     return True
 

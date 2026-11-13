@@ -95,7 +95,7 @@ class FlightsAgent(Agent):
             every = float(search.get("check_every_days", settings.get("check_every_days", DEFAULT_EVERY_DAYS)))
             calls = sweep_calls(search, sets, today)
             rows.append(
-                {"name": search["name"], "calls": calls, "every_days": every, "per_month": round(calls * 30 / every, 1)}
+                {"name": search["name"], "calls": calls, "every_days": every, "per_month": 0.0 if search.get("one_off") else round(calls * 30 / every, 1)}
             )
         return rows
 
@@ -166,6 +166,8 @@ class FlightsAgent(Agent):
                     float(spec.get("min_gap_hours", 3)),
                     float(spec.get("max_gap_hours", 24)),
                     bool(spec.get("count_gap_nights", True)),
+                    min_gap_by_airport=spec.get("min_gap_hours_by_airport"),
+                    max_gap_nights=spec.get("max_gap_nights"),
                 )
             else:
                 candidates = results["main"]

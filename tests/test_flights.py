@@ -150,6 +150,13 @@ class Validity(unittest.TestCase):
         self.assertFalse(is_valid({**base, "overnights": ["SIN", "LHR"]}, self.SEARCH, ok))
         self.assertTrue(is_valid({**base, "overnights": ["LHR"]}, self.SEARCH, None))
 
+    def test_via_any_needs_a_listed_airport_on_the_route(self):
+        base = {"stops": 1, "overnights": [], "arrives": "2026-11-17 08:00", "airports": ["DUD", "SIN", "CMB"]}
+        search = {"via_any": ["chc", "AKL", "OOL"]}
+        self.assertFalse(is_valid(base, search, None))
+        self.assertTrue(is_valid({**base, "airports": ["DUD", "CHC", "SIN", "CMB"]}, search, None))
+        self.assertTrue(is_valid({**base, "airports": ["DUD", "AKL", "CMB"]}, search, None))
+
     def test_max_stops(self):
         base = {"stops": 2, "overnights": [], "arrives": "2027-07-26 08:00"}
         self.assertFalse(is_valid(base, {**self.SEARCH, "max_stops": 1}, None))
@@ -190,6 +197,24 @@ class Stitching(unittest.TestCase):
         b = {**self.b("2027-07-26 09:00"), "link": "https://www.google.com/travel/flights?second"}
         out = stitch([a], [b], 5, 72)[0]
         self.assertEqual((out["link"], out["link2"]), (a["link"], b["link"]))
+
+    def test_minimum_gap_can_differ_by_departure_airport(self):
+        first = [self.a()]  # lands 14:00
+        at_ool = {**self.b("2027-07-25 17:30"), "from": "OOL", "price": 700}  # 3.5h gap
+        at_bne = {**self.b("2027-07-25 17:30"), "from": "BNE", "price": 800}  # 3.5h gap, needs 7h
+        out = stitch(first, [at_ool, at_bne], 3, 72, min_gap_by_airport={"BNE": 7})
+        self.assertEqual([o["price"] for o in out], [1000])
+        late_bne = {**self.b("2027-07-25 21:00"), "from": "BNE", "price": 800}  # 7h gap
+        out = stitch(first, [late_bne], 3, 72, min_gap_by_airport={"BNE": 7})
+        self.assertEqual([o["price"] for o in out], [1100])
+
+    def test_maximum_nights_between_tickets(self):
+        first = [self.a()]  # lands 25 Jul 14:00
+        two_nights = self.b("2027-07-27 20:00")
+        three_nights = self.b("2027-07-28 08:00")
+        out = stitch(first, [two_nights, three_nights], 3, 96, max_gap_nights=2)
+        self.assertEqual(len(out), 1)
+        self.assertEqual(out[0]["nights_extra"], 2)
 
     def test_gap_nights_can_be_ignored(self):
         out = stitch([self.a()], [self.b("2027-07-26 09:00")], 5, 72, count_gap_nights=False)[0]
@@ -409,7 +434,7 @@ class RealConfig(unittest.TestCase):
         for s in self.settings["searches"]:
             plan = search_plan(s, sets)
             self.assertTrue(plan)
-            if s.get("enabled", True) is False:
+            if s.get("enabled", True) is False or s.get("one_off"):
                 continue
             every = s.get("check_every_days", self.settings["check_every_days"])
             total += sweep_calls(s, sets, today) * 30 / every
@@ -443,6 +468,18 @@ class RealConfig(unittest.TestCase):
     def test_gold_coast_gap_nights_do_not_reduce_the_limit(self):
         gc = next(s for s in self.settings["searches"] if "Gold Coast" in s["name"])
         self.assertIs(gc["stitch"]["count_gap_nights"], False)
+
+    def test_colombo_searches_parse_and_cost_nine_calls(self):
+        sets = self.settings["airport_sets"]
+        cmb = [s for s in self.settings["searches"] if s["name"].startswith("CMB")]
+        self.assertEqual(len(cmb), 3)
+        self.assertEqual(sum(sweep_calls(s, sets, date(2026, 11, 14)) for s in cmb), 9)
+        self.assertTrue(all(s["rules"]["base_cap"] == 1100 and s["check_every_days"] == 12 for s in cmb))
+        gold = next(s for s in cmb if "Gold Coast" in s["name"])
+        self.assertEqual(gold["stitch"]["min_gap_hours_by_airport"], {"BNE": 7})
+        second = search_plan(gold, sets)["second"]
+        self.assertTrue(all(q["from"] == "OOL,BNE" and q["to"] == "CMB" for q in second))
+        self.assertEqual([q["depart"] for q in second], ["2027-03-15", "2027-03-16", "2027-03-17"])
 
     def test_brisbane_sydney_hong_kong_allowed_for_overnights(self):
         self.assertTrue({"BNE", "SYD", "HKG"} <= set(self.settings["airport_sets"]["overnight_ok"]))

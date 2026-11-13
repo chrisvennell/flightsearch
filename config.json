@@ -219,6 +219,94 @@
             "base_cap": 150,
             "prefer": "cheapest"
           }
+        },
+        {
+          "name": "CMB 15 Mar: one ticket via CHC, AKL or OOL",
+          "from": "DUD",
+          "to": "CMB",
+          "depart": "2027-03-15",
+          "via_any": [
+            "CHC",
+            "AKL",
+            "OOL"
+          ],
+          "overnight_ok": [
+            "OOL",
+            "AKL"
+          ],
+          "rules": {
+            "base_cap": 1100,
+            "prefer": "cheapest"
+          },
+          "check_every_days": 12
+        },
+        {
+          "name": "CMB 15 Mar: two tickets via Auckland",
+          "stitch": {
+            "first": {
+              "from": "DUD",
+              "to": "AKL",
+              "depart": "2027-03-15"
+            },
+            "second": {
+              "from": "AKL",
+              "to": "CMB",
+              "depart": {
+                "from": "2027-03-15",
+                "to": "2027-03-17"
+              }
+            },
+            "min_gap_hours": 3,
+            "max_gap_hours": 72,
+            "max_gap_nights": 2,
+            "count_gap_nights": false
+          },
+          "overnight_ok": [
+            "OOL",
+            "AKL"
+          ],
+          "rules": {
+            "base_cap": 1100,
+            "prefer": "cheapest"
+          },
+          "check_every_days": 12
+        },
+        {
+          "name": "CMB 15 Mar: two tickets via Gold Coast",
+          "stitch": {
+            "first": {
+              "from": "DUD",
+              "to": "OOL",
+              "depart": "2027-03-15"
+            },
+            "second": {
+              "from": [
+                "OOL",
+                "BNE"
+              ],
+              "to": "CMB",
+              "depart": {
+                "from": "2027-03-15",
+                "to": "2027-03-17"
+              }
+            },
+            "min_gap_hours": 3,
+            "min_gap_hours_by_airport": {
+              "BNE": 7
+            },
+            "max_gap_hours": 72,
+            "max_gap_nights": 2,
+            "count_gap_nights": false
+          },
+          "overnight_ok": [
+            "OOL",
+            "AKL"
+          ],
+          "rules": {
+            "base_cap": 1100,
+            "prefer": "cheapest"
+          },
+          "check_every_days": 12
         }
       ]
     }
