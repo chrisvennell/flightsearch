@@ -4,7 +4,7 @@
       "budget": {
         "limit": 250,
         "month": "2026-11",
-        "used": 41
+        "used": 63
       },
       "error": null,
       "items": [
@@ -24,7 +24,7 @@
           "history": [
             1452
           ],
-          "link": "https://www.google.com/travel/flights?q=Flights%20for%20Out%3A%20via%20Gold%20Coast%2C%20overland%20to%20Brisbane",
+          "link": "https://www.google.com/travel/flights?hl=en&gl=nz&curr=NZD&tfs=CBwQAhoeEgoyMDI3LTA3LTI1agcIARIDRFVEcgcIARIDT09MQAFIAXABmAEC&tfu=EgIIAg",
           "subtitle": "DUD-AKL-OOL / BNE-SIN-BCN. leaves 25 Jul 19:40, arrives 27 Jul 06:55. 45h 15m total. Air New Zealand + Singapore Airlines. two tickets: OOL to BNE, 7h between tickets. Limit for this routing NZD 1,600",
           "title": "Out: via Gold Coast, overland to Brisbane",
           "tone": "good",
@@ -35,7 +35,7 @@
           "history": [
             1461
           ],
-          "link": "https://www.google.com/travel/flights?q=Flights%20for%20Out%3A%20Sydney%20to%20Western%20Sydney%20self%20transfer",
+          "link": "https://www.google.com/travel/flights?hl=en&gl=nz&curr=NZD&tfs=CBwQAhonEgoyMDI3LTA3LTI3agcIARIDRFVEcgcIARIDU1lEcgcIARIDV1NJQAFIAXABmAEC&tfu=EgIIAg",
           "subtitle": "DUD-CHC-AKL-SYD / SYD-SIN-BCN. leaves 27 Jul 16:50, arrives 29 Jul 06:55. 48h 05m total. Air New Zealand + Singapore Airlines. two tickets: SYD to SYD, 6h between tickets. Limit for this routing NZD 1,600",
           "title": "Out: Sydney to Western Sydney self transfer",
           "tone": "good",
@@ -64,10 +64,10 @@
           "value": "NZD 260"
         }
       ],
-      "summary": "5 of 5 searches checked this run, 41 calls, 3 alerts",
+      "summary": "2 of 5 searches checked this run, 22 calls, 2 alerts",
       "title": "Flights",
-      "updated": "2026-11-12T23:52:03+00:00"
+      "updated": "2026-11-13T00:27:45+00:00"
     }
   },
-  "updated": "2026-11-12T23:52:03+00:00"
+  "updated": "2026-11-13T00:27:45+00:00"
 }
