@@ -220,13 +220,17 @@ class FlightsAgent(Agent):
             items.append(card)
 
             if reasons:
+                two_tickets = bool(shown.get("link2"))
                 lines = [f"{name}: {currency} {shown['price']:,}", detail, reasons[0].capitalize()]
+                if two_tickets:
+                    lines.append("Tap the notification for ticket 1, or the button for ticket 2.")
                 if previous is not None and previous != shown["price"]:
                     lines.append(f"Previous check: {currency} {previous:,}")
+                extra = [("Ticket 2", shown["link2"])] if two_tickets else []
                 alerts.append(
-                    Alert(title=f"Flight deal: {name}"[:60], message="\n".join(lines), priority=4, click=link)
+                    Alert(title=f"Flight deal: {name}"[:60], message="\n".join(lines), priority=4, click=link, actions=extra)
                     if has_cap
-                    else Alert(title=f"Price drop: {name}"[:60], message="\n".join(lines), priority=3, click=link)
+                    else Alert(title=f"Price drop: {name}"[:60], message="\n".join(lines), priority=3, click=link, actions=extra)
                 )
 
         summary = f"{swept} of {len(searches)} searches checked this run, {calls} calls"

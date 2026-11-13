@@ -185,6 +185,12 @@ class Stitching(unittest.TestCase):
         self.assertTrue(out["stitched"])
         self.assertIn("BNE", out["airports"])
 
+    def test_links_of_both_tickets_are_kept(self):
+        a = {**self.a(), "link": "https://www.google.com/travel/flights?first"}
+        b = {**self.b("2027-07-26 09:00"), "link": "https://www.google.com/travel/flights?second"}
+        out = stitch([a], [b], 5, 72)[0]
+        self.assertEqual((out["link"], out["link2"]), (a["link"], b["link"]))
+
     def test_gap_nights_can_be_ignored(self):
         out = stitch([self.a()], [self.b("2027-07-26 09:00")], 5, 72, count_gap_nights=False)[0]
         self.assertEqual(out["nights_extra"], 0)
@@ -338,8 +344,10 @@ class AgentRun(unittest.TestCase):
         self.assertEqual(seen, [])
 
     def test_stitched_search_end_to_end(self):
-        first = {"best_flights": [raw(300, [leg("DUD", "OOL", "2027-07-25 08:00", "2027-07-25 11:00")], total=240)]}
-        second = {"best_flights": [raw(700, [leg("BNE", "SIN", "2027-07-26 09:00", "2027-07-26 16:00"),
+        first = {"search_metadata": {"google_flights_url": "https://www.google.com/travel/flights?first"},
+                 "best_flights": [raw(300, [leg("DUD", "OOL", "2027-07-25 08:00", "2027-07-25 11:00")], total=240)]}
+        second = {"search_metadata": {"google_flights_url": "https://www.google.com/travel/flights?second"},
+                  "best_flights": [raw(700, [leg("BNE", "SIN", "2027-07-26 09:00", "2027-07-26 16:00"),
                                              leg("SIN", "MAD", "2027-07-26 23:00", "2027-07-27 08:00")], total=1100)]}
         settings = {
             "currency": "NZD",
@@ -357,6 +365,9 @@ class AgentRun(unittest.TestCase):
         card = result.items[0]
         self.assertEqual(card["value"], "NZD 1,000")
         self.assertIn("two tickets", card["subtitle"])
+        self.assertEqual(card["link"], "https://www.google.com/travel/flights?first")
+        self.assertEqual(result.alerts[0].click, "https://www.google.com/travel/flights?first")
+        self.assertEqual(result.alerts[0].actions, [("Ticket 2", "https://www.google.com/travel/flights?second")])
         # one night between tickets lowers the cap from 1600 to 1400, still within it
         self.assertEqual(card["badge"], "within limits")
         self.assertEqual(result.calls_used, 2)

@@ -159,6 +159,8 @@ def stitch(
                     "nights_extra": max(nights, 0),
                     "airports": sorted(set(a["airports"]) | set(b["airports"])),
                     "stitched": True,
+                    "link": a.get("link"),
+                    "link2": b.get("link"),
                     "transfer": f"{a['to']} to {b['from']}, {hours:.0f}h between tickets",
                 }
             )

@@ -30,6 +30,7 @@ class Alert:
     message: str
     priority: int = 3  # ntfy scale: 1 min, 3 default, 4 high, 5 max
     click: str | None = None
+    actions: list[tuple[str, str]] = field(default_factory=list)  # (label, https url) buttons
 
 
 @dataclass

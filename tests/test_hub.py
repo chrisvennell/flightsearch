@@ -96,6 +96,15 @@ class Notify(unittest.TestCase):
         self.assertNotIn("Click", headers)
         self.assertEqual(body.decode("utf-8"), "Sydney\n$450")
 
+    def test_action_buttons_are_https_only_and_comma_safe(self):
+        alert = Alert(title="x", message="y", actions=[("Ticket 2", "https://example.com/a?b=1,2;3"),
+                                                       ("Bad", "javascript:alert(1)")])
+        headers = build_request(alert, "t")[2]
+        self.assertEqual(headers["Actions"], "view, Ticket 2, https://example.com/a?b=1%2C2%3B3")
+
+    def test_no_actions_header_without_buttons(self):
+        self.assertNotIn("Actions", build_request(Alert(title="x", message="y"), "t")[2])
+
     def test_https_click_is_kept(self):
         alert = Alert(title="x", message="y", click="https://example.com/a")
         self.assertEqual(build_request(alert, "t")[2]["Click"], "https://example.com/a")

@@ -20,6 +20,14 @@ def build_request(alert: Alert, topic: str, server: str = "https://ntfy.sh"):
     }
     if alert.click and alert.click.startswith("https://"):
         headers["Click"] = alert.click
+    buttons = []
+    for label, link in alert.actions[:3]:
+        if link and link.startswith("https://"):
+            # commas and semicolons separate fields in the Actions header
+            safe = link.replace(",", "%2C").replace(";", "%3B")
+            buttons.append(f"view, {_ascii(label).replace(',', '')}, {safe}")
+    if buttons:
+        headers["Actions"] = "; ".join(buttons)
     url = f"{server.rstrip('/')}/{topic}"
     return url, alert.message.encode("utf-8"), headers
 
