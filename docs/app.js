@@ -45,8 +45,10 @@
 
   function card(item) {
     var safeLink = typeof item.link === "string" && item.link.indexOf("https://") === 0;
-    var node = el(safeLink ? "a" : "div", "card");
-    if (safeLink) {
+    var safeLink2 = typeof item.link2 === "string" && item.link2.indexOf("https://") === 0;
+    var twoTickets = safeLink && safeLink2;
+    var node = el(safeLink && !twoTickets ? "a" : "div", "card");
+    if (safeLink && !twoTickets) {
       node.href = item.link;
       node.target = "_blank";
       node.rel = "noopener noreferrer";
@@ -69,6 +71,18 @@
     if (Array.isArray(item.history)) {
       var spark = sparkline(item.history);
       if (spark) node.appendChild(spark);
+    }
+    if (twoTickets) {
+      // A card cannot be a link and hold links, so a two-ticket card gets one button per ticket.
+      var links = el("div", "links");
+      [["Ticket 1", item.link], ["Ticket 2", item.link2]].forEach(function (pair) {
+        var a = el("a", "tbtn", pair[0]);
+        a.href = pair[1];
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        links.appendChild(a);
+      });
+      node.appendChild(links);
     }
     return node;
   }
