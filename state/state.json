@@ -1,7 +1,7 @@
 {
   "_usage": {
     "flights": {
-      "2026-11": 153
+      "2026-11": 162
     }
   },
   "agents": {
@@ -38,65 +38,77 @@
       "CMB 15 Mar: one ticket via CHC, AKL or OOL": {
         "best": 1212,
         "card": {
-          "badge": "NZD 112 over",
+          "badge": "NZD 113 over",
           "link": "https://www.google.com/travel/flights?hl=en&gl=nz&curr=NZD&tfs=CBwQAhoeEgoyMDI3LTAzLTE1agcIARIDRFVEcgcIARIDQ01CQAFIAXABmAEC&tfu=EgIIAg",
           "subtitle": "DUD-AKL-HKG-CMB. leaves 15 Mar 19:40, arrives 16 Mar 23:25. 35h 15m total. Air New Zealand + Cathay Pacific. Limit for this routing NZD 1,100",
           "title": "CMB 15 Mar: one ticket via CHC, AKL or OOL",
           "tone": "",
-          "value": "NZD 1,212"
+          "value": "NZD 1,213"
         },
-        "checked": "2026-11-13T22:37:29+00:00",
+        "checked": "2026-11-26T01:39:06+00:00",
         "history": [
           [
             "2026-11-13",
             1212
+          ],
+          [
+            "2026-11-26",
+            1213
           ]
         ],
-        "last": 1212,
+        "last": 1213,
         "last_alert_price": null,
-        "last_sweep": "2026-11-13"
+        "last_sweep": "2026-11-26"
       },
       "CMB 15 Mar: two tickets via Auckland": {
-        "best": 1067,
+        "best": 1039,
         "card": {
           "badge": "within limits",
           "link": "https://www.google.com/travel/flights?hl=en&gl=nz&curr=NZD&tfs=CBwQAhoeEgoyMDI3LTAzLTE1agcIARIDRFVEcgcIARIDQUtMQAFIAXABmAEC&tfu=EgIIAg",
-          "subtitle": "DUD-AKL / AKL-MEL-CMB. leaves 15 Mar 11:50, arrives 16 Mar 17:50. 37h 30m total. Jetstar. two tickets: AKL to AKL, 20h between tickets. Limit for this routing NZD 1,100",
+          "subtitle": "DUD-AKL / AKL-SIN-CMB. leaves 15 Mar 11:50, arrives 16 Mar 11:00. 30h 40m total. Jetstar + Air New Zealand + SriLankan. two tickets: AKL to AKL, 4h between tickets. Limit for this routing NZD 1,100",
           "title": "CMB 15 Mar: two tickets via Auckland",
           "tone": "good",
-          "value": "NZD 1,067"
+          "value": "NZD 1,039"
         },
-        "checked": "2026-11-13T22:37:29+00:00",
+        "checked": "2026-11-26T01:39:06+00:00",
         "history": [
           [
             "2026-11-13",
             1067
+          ],
+          [
+            "2026-11-26",
+            1039
           ]
         ],
-        "last": 1067,
+        "last": 1039,
         "last_alert_price": 1067,
-        "last_sweep": "2026-11-13"
+        "last_sweep": "2026-11-26"
       },
       "CMB 15 Mar: two tickets via Gold Coast": {
-        "best": 1311,
+        "best": 1150,
         "card": {
-          "badge": "NZD 211 over",
+          "badge": "NZD 50 over",
           "link": "https://www.google.com/travel/flights?hl=en&gl=nz&curr=NZD&tfs=CBwQAhoeEgoyMDI3LTAzLTE1agcIARIDRFVEcgcIARIDT09MQAFIAXABmAEC&tfu=EgIIAg",
-          "subtitle": "DUD-AKL-OOL / BNE-MNL-SIN-CMB. leaves 15 Mar 19:40, arrives 18 Mar 11:00. 70h 50m total. Air New Zealand + Philippine Airlines + SriLankan. two tickets: OOL to BNE, 26h between tickets. Limit for this routing NZD 1,100",
+          "subtitle": "DUD-AKL-OOL / OOL-SYD-SIN-KUL-CMB. leaves 15 Mar 19:40, arrives 18 Mar 09:25. 69h 15m total. Air New Zealand + Virgin Australia + Scoot + AirAsia. two tickets: OOL to OOL, 29h between tickets. Limit for this routing NZD 1,100",
           "title": "CMB 15 Mar: two tickets via Gold Coast",
           "tone": "",
-          "value": "NZD 1,311"
+          "value": "NZD 1,150"
         },
-        "checked": "2026-11-13T22:37:29+00:00",
+        "checked": "2026-11-26T01:39:06+00:00",
         "history": [
           [
             "2026-11-13",
             1311
+          ],
+          [
+            "2026-11-26",
+            1150
           ]
         ],
-        "last": 1311,
+        "last": 1150,
         "last_alert_price": null,
-        "last_sweep": "2026-11-13"
+        "last_sweep": "2026-11-26"
       },
       "Dunedin to Wellington return": {
         "best": 260,
