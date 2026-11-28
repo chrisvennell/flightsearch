@@ -1,7 +1,7 @@
 {
   "_usage": {
     "flights": {
-      "2026-11": 210
+      "2026-11": 214
     }
   },
   "agents": {
@@ -160,6 +160,26 @@
         "last": 290,
         "last_alert_price": null,
         "last_sweep": "2026-11-26"
+      },
+      "Home: OOL or BNE to Dunedin, 26-29 Dec": {
+        "best": 366,
+        "card": {
+          "badge": "within limits",
+          "link": "https://www.google.com/travel/flights?hl=en&gl=nz&curr=NZD&tfs=CBwQAhonEgoyMDI2LTEyLTI2agcIARIDT09MagcIARIDQk5FcgcIARIDRFVEQAFIAXABmAEC&tfu=EgIIAg",
+          "subtitle": "OOL-DUD. leaves 26 Dec 08:45, arrives 26 Dec 15:10. 3h 25m total. Jetstar",
+          "title": "Home: OOL or BNE to Dunedin, 26-29 Dec",
+          "tone": "good",
+          "value": "NZD 366"
+        },
+        "checked": "2026-11-28T07:50:58+00:00",
+        "history": [
+          [
+            "2026-11-28",
+            366
+          ]
+        ],
+        "last": 366,
+        "last_sweep": "2026-11-28"
       },
       "Out: DUD to Spain direct booking": {
         "best": 1497,
