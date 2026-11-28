@@ -162,6 +162,41 @@ class Validity(unittest.TestCase):
         self.assertFalse(is_valid(base, {**self.SEARCH, "max_stops": 1}, None))
 
 
+class HomeRules(unittest.TestCase):
+    BASE = {"stops": 0, "overnights": [], "arrives": "2026-12-27 12:00", "from": "OOL", "departs": "2026-12-26 12:00"}
+
+    def test_only_from(self):
+        search = {"only_from": ["ool"]}
+        self.assertTrue(is_valid(self.BASE, search, None))
+        self.assertFalse(is_valid({**self.BASE, "from": "BNE"}, search, None))
+
+    def test_not_before_applies_to_that_airport_and_date_only(self):
+        search = {"depart_not_before": [{"from": "OOL", "date": "2026-12-26", "time": "10:00"}]}
+        self.assertFalse(is_valid({**self.BASE, "departs": "2026-12-26 09:59"}, search, None))
+        self.assertTrue(is_valid({**self.BASE, "departs": "2026-12-26 10:00"}, search, None))
+        self.assertTrue(is_valid({**self.BASE, "departs": "2026-12-27 06:00"}, search, None))
+        self.assertTrue(is_valid({**self.BASE, "from": "BNE", "departs": "2026-12-26 06:00"}, search, None))
+
+    def test_arrive_by(self):
+        search = {"arrive_by": "2026-12-31 13:00"}
+        self.assertTrue(is_valid({**self.BASE, "arrives": "2026-12-31 13:00"}, search, None))
+        self.assertFalse(is_valid({**self.BASE, "arrives": "2026-12-31 13:01"}, search, None))
+        self.assertFalse(is_valid({**self.BASE, "arrives": None}, search, None))
+
+    def test_same_airport_pairing(self):
+        def one(price, frm, to, dep, arr):
+            return normalize(raw(price, [leg(frm, to, dep, arr)], total=120))
+
+        first = [one(100, "OOL", "AKL", "2026-12-27 08:00", "2026-12-27 13:00"),
+                 one(90, "OOL", "WLG", "2026-12-27 08:00", "2026-12-27 13:00")]
+        second = [one(50, "AKL", "DUD", "2026-12-27 18:00", "2026-12-27 19:30"),
+                  one(40, "WLG", "DUD", "2026-12-27 18:00", "2026-12-27 19:30")]
+        mixed = stitch(first, second, 3, 96)
+        self.assertEqual(len(mixed), 4)
+        same = stitch(first, second, 3, 96, same_airport=True)
+        self.assertEqual(sorted(j["price"] for j in same), [130, 150])
+
+
 class Stitching(unittest.TestCase):
     def a(self, arrives="2027-07-25 14:00"):
         return {"price": 300, "duration": 240, "departs": "2027-07-25 08:00", "arrives": arrives,
@@ -397,6 +432,22 @@ class AgentRun(unittest.TestCase):
         self.assertEqual(card["badge"], "within limits")
         self.assertEqual(result.calls_used, 2)
 
+    def test_searches_asking_the_same_query_share_one_call(self):
+        reply = {"search_metadata": {"google_flights_url": "https://www.google.com/travel/flights?x=1"},
+                 "best_flights": [raw(300, [leg("OOL", "DUD", "2026-12-27 12:00", "2026-12-27 18:00")], total=360),
+                                  raw(250, [leg("BNE", "DUD", "2026-12-27 12:00", "2026-12-27 19:00")], total=420)]}
+        both = {"from": ["OOL", "BNE"], "to": "DUD", "depart": {"from": "2026-12-26", "to": "2026-12-27"},
+                "rules": {"prefer": "cheapest"}}
+        settings = {"currency": "NZD", "airport_sets": {},
+                    "searches": [{"name": "Gold Coast", "only_from": ["OOL"], **both},
+                                 {"name": "Brisbane", "only_from": ["BNE"], **both}]}
+        seen = []
+        result = agent(settings, budget=2, http=lambda u, t: seen.append(u) or reply).run()
+        self.assertEqual(len(seen), 2)
+        self.assertEqual(result.calls_used, 2)
+        self.assertEqual([c["value"] for c in result.items], ["NZD 300", "NZD 250"])
+        self.assertTrue(all(c["badge"] == "" for c in result.items))
+
     def test_no_secret_in_output(self):
         result = agent().run()
         self.assertNotIn("SECRETKEY", json.dumps([result.items, result.state]))
@@ -429,20 +480,14 @@ class RealConfig(unittest.TestCase):
 
     def test_every_enabled_search_parses_and_budget_holds(self):
         sets = self.settings["airport_sets"]
-        today = date(2026, 11, 13)
-        total = 0.0
         for s in self.settings["searches"]:
-            plan = search_plan(s, sets)
-            self.assertTrue(plan)
-            if s.get("enabled", True) is False or s.get("one_off"):
-                continue
-            every = s.get("check_every_days", self.settings["check_every_days"])
-            total += sweep_calls(s, sets, today) * 30 / every
-        self.assertLessEqual(total, self.settings["monthly_call_budget"])
+            self.assertTrue(search_plan(s, sets))
+        rows = FlightsAgent.plan(self.settings, date(2026, 11, 29))
+        self.assertLessEqual(sum(r["per_month"] for r in rows), self.settings["monthly_call_budget"])
 
     def test_outbound_query_dates(self):
         sets = self.settings["airport_sets"]
-        direct = search_plan(self.settings["searches"][0], sets)["main"]
+        direct = search_plan(next(x for x in self.settings["searches"] if x["name"].startswith("Out: DUD")), sets)["main"]
         self.assertEqual([q["depart"] for q in direct][0], "2027-07-24")
         self.assertEqual(len(direct), 5)
         self.assertTrue(all(q["from"] == "DUD" and "AGP" in q["to"] for q in direct))
@@ -458,7 +503,7 @@ class RealConfig(unittest.TestCase):
         self.assertEqual(qs[0]["to"], "BNE,OOL,MCY,DUD")
 
     def test_wellington_is_enabled_with_february_dates(self):
-        wlg = next(s for s in self.settings["searches"] if "Wellington" in s["name"])
+        wlg = next(s for s in self.settings["searches"] if s["name"].startswith("Dunedin to Wellington"))
         self.assertTrue(wlg.get("enabled", True))
         qs = search_plan(wlg, self.settings["airport_sets"])["main"]
         self.assertEqual(sorted({(q["depart"], q["return"]) for q in qs}),
@@ -466,7 +511,7 @@ class RealConfig(unittest.TestCase):
                           ("2027-02-18", "2027-02-21"), ("2027-02-18", "2027-02-22")])
 
     def test_gold_coast_gap_nights_do_not_reduce_the_limit(self):
-        gc = next(s for s in self.settings["searches"] if "Gold Coast" in s["name"])
+        gc = next(s for s in self.settings["searches"] if "overland" in s["name"])
         self.assertIs(gc["stitch"]["count_gap_nights"], False)
 
     def test_colombo_searches_parse_and_cost_nine_calls(self):
@@ -480,6 +525,28 @@ class RealConfig(unittest.TestCase):
         second = search_plan(gold, sets)["second"]
         self.assertTrue(all(q["from"] == "OOL,BNE" and q["to"] == "CMB" for q in second))
         self.assertEqual([q["depart"] for q in second], ["2027-03-15", "2027-03-16", "2027-03-17"])
+
+    def test_december_home_searches(self):
+        sets = self.settings["airport_sets"]
+        home = [s for s in self.settings["searches"] if s["name"].startswith("Home 26-30 Dec")]
+        self.assertEqual(len(home), 4)
+        gc, bne, via, south = home
+        shared = [search_plan(x, sets)["main"] for x in (gc, bne)]
+        self.assertEqual(shared[0], shared[1])
+        self.assertEqual([q["depart"] for q in shared[0]], ["2026-12-26", "2026-12-27", "2026-12-28", "2026-12-29", "2026-12-30"])
+        self.assertTrue(all(q["from"] == "OOL,BNE" and q["to"] == "DUD" for q in shared[0]))
+        self.assertEqual(gc["only_from"], ["OOL"])
+        self.assertEqual(bne["only_from"], ["BNE"])
+        plan = search_plan(via, sets)
+        self.assertEqual(len(plan["first"]), 5)
+        self.assertEqual([q["depart"] for q in plan["second"]][-1], "2026-12-31")
+        self.assertTrue(all(q["from"] == "AKL,WLG" and q["to"] == "DUD" for q in plan["second"]))
+        self.assertTrue(via["stitch"]["same_airport"])
+        self.assertEqual(via["stitch"]["max_gap_nights"], 3)
+        self.assertEqual(via["arrive_by"], "2026-12-31 13:00")
+        self.assertEqual(search_plan(south, sets)["main"][0]["to"], "CHC,ZQN")
+        rows = FlightsAgent.plan(self.settings, date(2026, 11, 29))
+        self.assertEqual(sum(r["calls"] for r in rows if r["name"].startswith("Home")), 21)
 
     def test_brisbane_sydney_hong_kong_allowed_for_overnights(self):
         self.assertTrue({"BNE", "SYD", "HKG"} <= set(self.settings["airport_sets"]["overnight_ok"]))
