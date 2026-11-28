@@ -1,7 +1,7 @@
 {
   "_usage": {
     "flights": {
-      "2026-11": 214
+      "2026-11": 235
     }
   },
   "agents": {
@@ -160,6 +160,87 @@
         "last": 290,
         "last_alert_price": null,
         "last_sweep": "2026-11-26"
+      },
+      "Home 26-30 Dec: Brisbane to Dunedin": {
+        "best": 785,
+        "card": {
+          "badge": "",
+          "link": "https://www.google.com/travel/flights?hl=en&gl=nz&curr=NZD&tfs=CBwQAhonEgoyMDI2LTEyLTMwagcIARIDT09MagcIARIDQk5FcgcIARIDRFVEQAFIAXABmAEC&tfu=EgIIAg",
+          "subtitle": "BNE-AKL-DUD. leaves 30 Dec 18:30, arrives 31 Dec 11:15. 13h 45m total. Qantas + Jetstar",
+          "title": "Home 26-30 Dec: Brisbane to Dunedin",
+          "tone": "",
+          "value": "NZD 785"
+        },
+        "checked": "2026-11-28T08:10:46+00:00",
+        "history": [
+          [
+            "2026-11-28",
+            785
+          ]
+        ],
+        "last": 785,
+        "last_sweep": "2026-11-28"
+      },
+      "Home 26-30 Dec: Gold Coast or Brisbane to Christchurch or Queenstown": {
+        "best": 391,
+        "card": {
+          "badge": "",
+          "link": "https://www.google.com/travel/flights?hl=en&gl=nz&curr=NZD&tfs=CBwQAhowEgoyMDI2LTEyLTI3agcIARIDT09MagcIARIDQk5FcgcIARIDQ0hDcgcIARIDWlFOQAFIAXABmAEC&tfu=EgIIAg",
+          "subtitle": "OOL-CHC. leaves 27 Dec 17:45, arrives 28 Dec 00:05. 3h 20m total. Jetstar",
+          "title": "Home 26-30 Dec: Gold Coast or Brisbane to Christchurch or Queenstown",
+          "tone": "",
+          "value": "NZD 391"
+        },
+        "checked": "2026-11-28T08:10:46+00:00",
+        "history": [
+          [
+            "2026-11-28",
+            391
+          ]
+        ],
+        "last": 391,
+        "last_sweep": "2026-11-28"
+      },
+      "Home 26-30 Dec: Gold Coast or Brisbane to Dunedin via Auckland or Wellington": {
+        "best": 722,
+        "card": {
+          "badge": "",
+          "link": "https://www.google.com/travel/flights?hl=en&gl=nz&curr=NZD&tfs=CBwQAhowEgoyMDI2LTEyLTI5agcIARIDT09MagcIARIDQk5FcgcIARIDQUtMcgcIARIDV0xHQAFIAXABmAEC&tfu=EgIIAg",
+          "link2": "https://www.google.com/travel/flights?hl=en&gl=nz&curr=NZD&tfs=CBwQAhonEgoyMDI2LTEyLTMwagcIARIDQUtMagcIARIDV0xHcgcIARIDRFVEQAFIAXABmAEC&tfu=EgIIAg",
+          "subtitle": "BNE-AKL / AKL-DUD. leaves 29 Dec 12:55, arrives 30 Dec 11:15. 19h 20m total. China Airlines + Jetstar. two tickets: AKL to AKL, 14h between tickets",
+          "title": "Home 26-30 Dec: Gold Coast or Brisbane to Dunedin via Auckland or Wellington",
+          "tone": "",
+          "value": "NZD 722"
+        },
+        "checked": "2026-11-28T08:10:46+00:00",
+        "history": [
+          [
+            "2026-11-28",
+            722
+          ]
+        ],
+        "last": 722,
+        "last_sweep": "2026-11-28"
+      },
+      "Home 26-30 Dec: Gold Coast to Dunedin": {
+        "best": 440,
+        "card": {
+          "badge": "",
+          "link": "https://www.google.com/travel/flights?hl=en&gl=nz&curr=NZD&tfs=CBwQAhonEgoyMDI2LTEyLTI5agcIARIDT09MagcIARIDQk5FcgcIARIDRFVEQAFIAXABmAEC&tfu=EgIIAg",
+          "subtitle": "OOL-DUD. leaves 29 Dec 09:20, arrives 29 Dec 15:45. 3h 25m total. Jetstar",
+          "title": "Home 26-30 Dec: Gold Coast to Dunedin",
+          "tone": "",
+          "value": "NZD 440"
+        },
+        "checked": "2026-11-28T08:10:46+00:00",
+        "history": [
+          [
+            "2026-11-28",
+            440
+          ]
+        ],
+        "last": 440,
+        "last_sweep": "2026-11-28"
       },
       "Home: OOL or BNE to Dunedin, 26-29 Dec": {
         "best": 366,
