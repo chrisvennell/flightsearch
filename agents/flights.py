@@ -19,6 +19,7 @@ from agents.flight_rules import (
     minutes_text,
     normalize,
     price_cap,
+    query_key,
     rules_of,
     search_plan,
     decide_reasons,
@@ -89,11 +90,17 @@ class FlightsAgent(Agent):
     def plan(settings: dict[str, Any], today: date) -> list[dict[str, Any]]:
         sets = settings.get("airport_sets", {})
         rows = []
+        seen: set[tuple] = set()  # searches that ask the same query in one run share its call
         for search in settings.get("searches", []):
             if search.get("enabled", True) is False:
                 continue
             every = float(search.get("check_every_days", settings.get("check_every_days", DEFAULT_EVERY_DAYS)))
-            calls = sweep_calls(search, sets, today)
+            calls = 0
+            for queries in search_plan(search, sets).values():
+                for query in live(queries, today):
+                    if query_key(query) not in seen:
+                        seen.add(query_key(query))
+                        calls += 1
             rows.append(
                 {"name": search["name"], "calls": calls, "every_days": every, "per_month": 0.0 if search.get("one_off") else round(calls * 30 / every, 1)}
             )
@@ -116,6 +123,7 @@ class FlightsAgent(Agent):
         alerts: list[Alert] = []
         calls = 0
         swept = 0
+        cache: dict[tuple, list[dict[str, Any]] | None] = {}  # answers fetched earlier in this run
         searches = [s for s in self.settings.get("searches", []) if s.get("enabled", True) is not False]
 
         for search in searches:
@@ -138,10 +146,10 @@ class FlightsAgent(Agent):
                 continue
 
             todo = {key: live(queries, today) for key, queries in plan.items()}
-            needed = sum(len(q) for q in todo.values())
-            if needed == 0 or any(not q for q in todo.values()):
+            if sum(len(q) for q in todo.values()) == 0 or any(not q for q in todo.values()):
                 items.append(self._card(search, st, currency, "dates passed", "warn"))
                 continue
+            needed = len({query_key(q) for queries in todo.values() for q in queries} - cache.keys())
             if self.budget_remaining is not None and calls + needed > self.budget_remaining:
                 items.append(self._card(search, st, currency, "budget reached", "warn"))
                 continue
@@ -150,10 +158,13 @@ class FlightsAgent(Agent):
             try:
                 for key, queries in todo.items():
                     for query in queries:
-                        found = self._fetch(search, query, currency, api_key)
-                        if found is not None:
-                            results[key].extend(found)
-                            calls += 1
+                        qk = query_key(query)
+                        if qk not in cache:
+                            cache[qk] = self._fetch(search, query, currency, api_key)
+                            if cache[qk] is not None:
+                                calls += 1
+                        if cache[qk] is not None:
+                            results[key].extend(dict(it) for it in cache[qk])
             except AgentError as exc:
                 items.append(self._card(search, st, currency, "error", "bad", note=str(exc)))
                 continue
@@ -168,6 +179,7 @@ class FlightsAgent(Agent):
                     bool(spec.get("count_gap_nights", True)),
                     min_gap_by_airport=spec.get("min_gap_hours_by_airport"),
                     max_gap_nights=spec.get("max_gap_nights"),
+                    same_airport=bool(spec.get("same_airport", False)),
                 )
             else:
                 candidates = results["main"]
@@ -209,7 +221,7 @@ class FlightsAgent(Agent):
                 st["last_alert_price"] = cheapest_q if has_cap else cheapest
 
             if qualifying:
-                badge, tone = "within limits", "good"
+                badge, tone = ("within limits", "good") if has_cap else ("", "")
             else:
                 over = shown["price"] - shown["cap"] if shown.get("cap") is not None else 0
                 badge, tone = (f"{currency} {over:,} over", "") if shown.get("cap") is not None else ("", "")
