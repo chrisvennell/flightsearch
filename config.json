@@ -7,7 +7,7 @@
       "gl": "nz",
       "adults": 1,
       "drop_alert_percent": 10,
-      "check_every_days": 6,
+      "check_every_days": 12,
       "airport_sets": {
         "spain": [
           "AGP",
@@ -62,6 +62,124 @@
         ]
       },
       "searches": [
+        {
+          "name": "Home 26-30 Dec: Gold Coast to Dunedin",
+          "from": [
+            "OOL",
+            "BNE"
+          ],
+          "to": "DUD",
+          "depart": {
+            "from": "2026-12-26",
+            "to": "2026-12-30"
+          },
+          "only_from": [
+            "OOL"
+          ],
+          "depart_not_before": [
+            {
+              "from": "OOL",
+              "date": "2026-12-26",
+              "time": "10:00"
+            }
+          ],
+          "rules": {
+            "prefer": "cheapest"
+          },
+          "check_every_days": 6
+        },
+        {
+          "name": "Home 26-30 Dec: Brisbane to Dunedin",
+          "from": [
+            "OOL",
+            "BNE"
+          ],
+          "to": "DUD",
+          "depart": {
+            "from": "2026-12-26",
+            "to": "2026-12-30"
+          },
+          "only_from": [
+            "BNE"
+          ],
+          "rules": {
+            "prefer": "cheapest"
+          },
+          "check_every_days": 6
+        },
+        {
+          "name": "Home 26-30 Dec: Gold Coast or Brisbane to Dunedin via Auckland or Wellington",
+          "stitch": {
+            "first": {
+              "from": [
+                "OOL",
+                "BNE"
+              ],
+              "to": [
+                "AKL",
+                "WLG"
+              ],
+              "depart": {
+                "from": "2026-12-26",
+                "to": "2026-12-30"
+              }
+            },
+            "second": {
+              "from": [
+                "AKL",
+                "WLG"
+              ],
+              "to": "DUD",
+              "depart": {
+                "from": "2026-12-26",
+                "to": "2026-12-31"
+              }
+            },
+            "min_gap_hours": 3,
+            "max_gap_hours": 96,
+            "max_gap_nights": 3,
+            "count_gap_nights": false,
+            "same_airport": true
+          },
+          "arrive_by": "2026-12-31 13:00",
+          "depart_not_before": [
+            {
+              "from": "OOL",
+              "date": "2026-12-26",
+              "time": "10:00"
+            }
+          ],
+          "rules": {
+            "prefer": "cheapest"
+          },
+          "check_every_days": 6
+        },
+        {
+          "name": "Home 26-30 Dec: Gold Coast or Brisbane to Christchurch or Queenstown",
+          "from": [
+            "OOL",
+            "BNE"
+          ],
+          "to": [
+            "CHC",
+            "ZQN"
+          ],
+          "depart": {
+            "from": "2026-12-26",
+            "to": "2026-12-30"
+          },
+          "depart_not_before": [
+            {
+              "from": "OOL",
+              "date": "2026-12-26",
+              "time": "10:00"
+            }
+          ],
+          "rules": {
+            "prefer": "cheapest"
+          },
+          "check_every_days": 6
+        },
         {
           "name": "Out: DUD to Spain direct booking",
           "from": "DUD",
@@ -217,21 +335,6 @@
           ],
           "rules": {
             "base_cap": 150,
-            "prefer": "cheapest"
-          }
-        },
-        {
-          "name": "Home: OOL or BNE to Dunedin, 26-29 Dec",
-          "from": [
-            "OOL",
-            "BNE"
-          ],
-          "to": "DUD",
-          "depart": {
-            "from": "2026-12-26",
-            "to": "2026-12-29"
-          },
-          "rules": {
             "prefer": "cheapest"
           }
         },
