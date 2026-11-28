@@ -221,6 +221,21 @@
           }
         },
         {
+          "name": "Home: OOL or BNE to Dunedin, 26-29 Dec",
+          "from": [
+            "OOL",
+            "BNE"
+          ],
+          "to": "DUD",
+          "depart": {
+            "from": "2026-12-26",
+            "to": "2026-12-29"
+          },
+          "rules": {
+            "prefer": "cheapest"
+          }
+        },
+        {
           "name": "CMB 15 Mar: one ticket via CHC, AKL or OOL",
           "from": "DUD",
           "to": "CMB",
