@@ -127,10 +127,12 @@ def stitch(
     count_gap_nights: bool = True,
     min_gap_by_airport: dict[str, float] | None = None,
     max_gap_nights: int | None = None,
+    same_airport: bool = False,
 ) -> list[dict[str, Any]]:
     """Pair two separate tickets where the second leaves a suitable time after the first lands.
 
     Both airports must share a time zone for the gap to be right (OOL and BNE, SYD and WSI).
+    With same_airport the second ticket must leave from the airport the first one lands at.
     """
     joined: list[dict[str, Any]] = []
     for a in first:
@@ -138,6 +140,8 @@ def stitch(
         if landed is None:
             continue
         for b in second:
+            if same_airport and a["to"] != b["from"]:
+                continue
             leaves = parse_time(b["departs"])
             if leaves is None:
                 continue
@@ -220,6 +224,18 @@ def is_valid(
     via = search.get("via_any")
     if via and not (set(it["airports"]) & {code.upper() for code in via}):
         return False
+    only_from = search.get("only_from")
+    if only_from and it.get("from") not in {code.upper() for code in only_from}:
+        return False
+    # Not before a local time at an airport on a date, e.g. {"from": "OOL", "date": "2026-12-26", "time": "10:00"}.
+    for rule in search.get("depart_not_before") or []:
+        leaves = it.get("departs") or ""
+        if it.get("from") == rule["from"].upper() and leaves[:10] == rule["date"] and leaves[11:16] < rule["time"]:
+            return False
+    # Latest arrival, local time at the destination, e.g. "2026-12-31 13:00".
+    latest = search.get("arrive_by")
+    if latest and (not it.get("arrives") or it["arrives"] > latest):
+        return False
     return True
 
 
@@ -291,6 +307,11 @@ def search_plan(search: dict[str, Any], sets: dict[str, list[str]]) -> dict[str,
     for block in search.get("queries") or [{}]:
         queries.extend(expand_queries(block, base, sets))
     return {"main": queries}
+
+
+def query_key(query: dict[str, Any]) -> tuple:
+    """Identifies an API query, so searches asking the same thing can share one call."""
+    return tuple(query.get(k) for k in BLOCK_KEYS)
 
 
 def live(queries: list[dict[str, Any]], today: date) -> list[dict[str, Any]]:
